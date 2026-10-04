@@ -45,12 +45,12 @@ jobs:
           package-manager-cache: false
 
       - name: Prepare Android SDK
-        # GitHub's Ubuntu image supplies the Android command-line tools.
+        # GitHub's Ubuntu image supplies these tools outside the default PATH.
         # Process substitution avoids treating yes's expected SIGPIPE as a failure,
         # while a nonzero sdkmanager exit still fails this step.
         run: |
-          sdkmanager --licenses < <(yes) > /dev/null
-          sdkmanager --install 'platforms;android-35' 'build-tools;35.0.0'
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses < <(yes) > /dev/null
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install 'platforms;android-35' 'build-tools;35.0.0'
 
       - name: Run JavaScript tests
         run: node --test tests/*.test.cjs
