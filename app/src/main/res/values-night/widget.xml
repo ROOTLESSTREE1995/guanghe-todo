@@ -1,0 +1,10 @@
+<resources>
+    <color name="widget_surface">#202A25</color>
+    <color name="widget_ink">#F1F3EB</color>
+    <color name="widget_muted">#ACB8AF</color>
+    <color name="widget_green">#A1CFAC</color>
+    <color name="widget_amber">#EAC084</color>
+    <color name="widget_danger">#FFA79C</color>
+    <color name="widget_line">#39453D</color>
+    <color name="widget_chip">#334139</color>
+</resources>

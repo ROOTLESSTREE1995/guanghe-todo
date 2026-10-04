@@ -1,0 +1,3 @@
+<inset xmlns:android="http://schemas.android.com/apk/res/android" android:inset="15dp">
+    <bitmap android:src="@drawable/guanghe_mark" android:gravity="fill" android:filter="true" />
+</inset>

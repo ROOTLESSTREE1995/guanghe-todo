@@ -1,0 +1,33 @@
+.gradle/
+.idea/
+.DS_Store
+local.properties
+**/build/
+*.iml
+*.jks
+*.keystore
+.toolchain/
+__pycache__/
+
+# Local debugging, message captures, and generated installation packages
+/work/
+/screenshots/
+/captures/
+*.apk
+*.aab
+*.apks
+*.log
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+
+# Credentials, signing material, and local environment
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.pfx
+key.properties
+keystore.properties

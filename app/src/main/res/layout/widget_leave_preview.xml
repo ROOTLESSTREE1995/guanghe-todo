@@ -1,0 +1,8 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@drawable/widget_background" android:padding="16dp">
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/widget_brand" android:textSize="11sp" android:textColor="@color/widget_muted" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="@string/widget_leave_title" android:textSize="20sp" android:fontFamily="sans-serif-medium" android:textColor="@color/widget_ink" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:text="@string/widget_leave_preview_1" android:textSize="14sp" android:fontFamily="sans-serif-medium" android:textColor="@color/widget_ink" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/widget_leave_preview_time_1" android:textSize="11sp" android:textColor="@color/widget_amber" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/widget_leave_preview_2" android:textSize="14sp" android:fontFamily="sans-serif-medium" android:textColor="@color/widget_ink" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="@string/widget_leave_preview_time_2" android:textSize="11sp" android:textColor="@color/widget_muted" />
+</LinearLayout>
