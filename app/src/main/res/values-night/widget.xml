@@ -1,5 +1,7 @@
 <resources>
     <color name="widget_surface">#202A25</color>
+    <color name="widget_todo_surface">#213027</color>
+    <color name="widget_leave_surface">#312B22</color>
     <color name="widget_ink">#F1F3EB</color>
     <color name="widget_muted">#ACB8AF</color>
     <color name="widget_green">#A1CFAC</color>

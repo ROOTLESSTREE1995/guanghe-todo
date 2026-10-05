@@ -1,6 +1,5 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="250dp" android:minHeight="180dp" android:minResizeWidth="180dp" android:minResizeHeight="160dp"
-    android:targetCellWidth="4" android:targetCellHeight="3" android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="1800000" android:initialLayout="@layout/widget_dashboard"
-    android:previewLayout="@layout/widget_todo_preview" android:description="@string/widget_todo_description"
+    android:minWidth="250dp" android:minHeight="110dp" android:minResizeWidth="110dp" android:minResizeHeight="56dp" android:resizeMode="horizontal|vertical"
+    android:targetCellWidth="4" android:targetCellHeight="2" android:previewLayout="@layout/widget_todo_preview"
+    android:updatePeriodMillis="1800000" android:initialLayout="@layout/widget_dashboard" android:description="@string/widget_todo_list_description"
     android:widgetCategory="home_screen" />

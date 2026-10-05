@@ -10,6 +10,8 @@
     state=C.defaults(); state.items=C.samples();
   }
   state.version=C.defaults().version;
+  // A browser preview must never present cached device diagnostics as live status.
+  state.captureDiagnostics=null;
   const persist=() => {try {localStorage.setItem(storageKey,JSON.stringify(state));}catch(_) {}};
   const response=(fn) => {try {const result=fn() || {};persist();return JSON.stringify({ok:true,...result});}catch(e){return JSON.stringify({ok:false,error:e.message || '操作未完成'});}};
   const uuid=() => typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : 'p-'+Date.now()+'-'+Math.random().toString(16).slice(2);
@@ -27,6 +29,7 @@
     processInbox:()=>response(()=>{}),
     testApi:()=>JSON.stringify({ok:false,error:'连接测试需在安卓 App 中使用你自己的 Key'}),
     requestWidget:()=>JSON.stringify({ok:false,error:'这是界面预览，桌面小组件需在安卓 App 中添加'}),
+    repairNotificationListener:()=>JSON.stringify({ok:true,status:'preview'}),
     openSystemSettings:()=>JSON.stringify({ok:false,error:'这是界面预览，手机权限需在安卓 App 中设置'}),
     requestNotificationPermission:()=>JSON.stringify({ok:false,error:'这是界面预览，手机权限需在安卓 App 中设置'})
   };

@@ -113,5 +113,5 @@ test('preview widget requests report unsupported and preserve task data',()=>{
   const result=JSON.parse(api.requestWidget(JSON.stringify({kind:'todo'})));
   assert.equal(result.ok,false);assert.match(result.error,/预览/);
   assert.deepEqual(JSON.parse(api.getState()).items,before.items);
-  assert.equal(before.version,'0.3.0');
+  assert.equal(before.version,'0.3.1');
 });

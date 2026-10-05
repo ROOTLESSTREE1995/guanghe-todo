@@ -25,8 +25,25 @@
             <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_leave_info" />
         </receiver>
+        <receiver android:name=".TodoMiniWidgetProvider" android:exported="false" android:label="@string/widget_todo_mini_name">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_todo_mini_info" />
+        </receiver>
+        <receiver android:name=".LeaveMiniWidgetProvider" android:exported="false" android:label="@string/widget_leave_mini_name">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_leave_mini_info" />
+        </receiver>
+        <receiver android:name=".TodoCompactWidgetProvider" android:exported="false" android:label="@string/widget_todo_compact_name">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_todo_compact_info" />
+        </receiver>
+        <receiver android:name=".LeaveCompactWidgetProvider" android:exported="false" android:label="@string/widget_leave_compact_name">
+            <intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE" /></intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_leave_compact_info" />
+        </receiver>
         <service android:name=".WidgetListService" android:permission="android.permission.BIND_REMOTEVIEWS" android:exported="false" />
         <receiver android:name=".WidgetRefreshReceiver" android:exported="false" />
+        <receiver android:name=".WidgetActionReceiver" android:exported="false" />
         <receiver android:name=".BootReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>

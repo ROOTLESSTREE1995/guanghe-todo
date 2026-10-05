@@ -5,20 +5,21 @@ const vm = require('node:vm');
 const C = require('../app/src/main/assets/core.js');
 
 // Execute the bundled UI with a small DOM boundary to exercise native callbacks.
-function ui() {
+function ui(options={}) {
   const listeners = {};
   const element = () => ({innerHTML:'',classList:{add(){},remove(){}},setAttribute(){},removeAttribute(){}});
-  const app = element(), toast = element(), calls = [];
+  const app = element(), toast = element(), calls = [], sizePicker=options.size?{id:'widget-size',value:options.size}:null;
   const state = C.defaults();
   const window = {BanxuCore:C,isBanxuPreview:false,scrollTo(){},addEventListener(){},Banxu:{
     getState:()=>JSON.stringify(state),
     requestWidget:json=>{calls.push(JSON.parse(json));return JSON.stringify({ok:true,queued:true});}
   }};
-  const document = {querySelector:s=>({'#app':app,'#toast':toast}[s]||null),addEventListener:(name,fn)=>{listeners[name]=fn;}};
+  const document = {querySelector:s=>({'#app':app,'#toast':toast,'#widget-size':sizePicker}[s]||null),addEventListener:(name,fn)=>{listeners[name]=fn;}};
   vm.runInNewContext(fs.readFileSync(require.resolve('../app/src/main/assets/app.js'),'utf8'),
     {window,document,Date,Intl,JSON,setInterval(){},setTimeout(){},clearTimeout(){}});
   const click = dataset => listeners.click({target:{closest:()=>({dataset})}});
-  return {window,app,toast,calls,click};
+  const selectSize=value=>{sizePicker.value=value;listeners.change({target:sizePicker});};
+  return {window,app,toast,calls,click,selectSize};
 }
 
 test('widget header routing opens the correct page and rejects unknown routes',()=>{
@@ -50,4 +51,22 @@ test('pin callback reports only submission and stale widget item links explain a
   assert.doesNotMatch(toast.innerHTML,/已添加/);
   window.onNativeOpenItem('already-deleted');
   assert.match(toast.innerHTML,/已不存在/);
+});
+
+
+test('widget size selection sends both function and chosen dimensions without rerendering settings',()=>{
+  const {click,selectSize,app,calls}=ui({size:'compact'});
+  click({action:'navigate',route:'settings'});
+  assert.match(app.innerHTML,/<option value="compact" selected>小卡 2×2 · 推荐/);
+  const settingsHtml=app.innerHTML;
+  click({action:'add-widget',kind:'todo'});
+  selectSize('mini');
+  assert.equal(app.innerHTML,settingsHtml);
+  click({action:'add-widget',kind:'leave'});
+  selectSize('list');
+  click({action:'add-widget',kind:'todo'});
+  assert.deepEqual(calls,[{kind:'todo',size:'compact'},{kind:'leave',size:'mini'},{kind:'todo',size:'list'}]);
+  click({action:'navigate',route:'today'});
+  click({action:'navigate',route:'settings'});
+  assert.match(app.innerHTML,/<option value="list" selected>列表 4×2/);
 });

@@ -22,16 +22,20 @@ public final class Repository {
         JSONObject permissions = new JSONObject().put("notificationAccess", notificationAccess(c)).put("postNotifications", canNotify(c))
             .put("exactAlarms", canExact(c)).put("batteryOptimized", !c.getSystemService(PowerManager.class).isIgnoringBatteryOptimizations(c.getPackageName()));
         return new JSONObject().put("settings", new SecureSettings(c).publicJson()).put("permissions", permissions)
+            .put("captureDiagnostics", ListenerHealth.snapshot(c))
             .put("items", store.allItems()).put("inbox", store.allInbox()).put("lastError", store.meta("lastError"))
-            .put("processing", store.isProcessing() || store.hasPending()).put("version", "0.3.0")
+            .put("processing", store.isProcessing() || store.hasPending()).put("version", "0.3.1")
             .put("apiTest", new JSONObject().put("status", apiStatus).put("message", apiMessage));
     }
     static boolean notificationAccess(Context c) {
-        String enabled = Settings.Secure.getString(c.getContentResolver(), "enabled_notification_listeners");
-        if (enabled == null) return false;
-        ComponentName own = new ComponentName(c, CaptureService.class);
-        for (String item : enabled.split(":")) if (own.equals(ComponentName.unflattenFromString(item))) return true;
-        return false;
+        try {
+            ComponentName own = new ComponentName(c, CaptureService.class);
+            if (Build.VERSION.SDK_INT >= 27) return c.getSystemService(NotificationManager.class).isNotificationListenerAccessGranted(own);
+            // Android 8.0 predates the public API; match the complete component, never a package substring.
+            String enabled = Settings.Secure.getString(c.getContentResolver(), "enabled_notification_listeners");
+            if (enabled != null) for (String item : enabled.split(":")) if (own.equals(ComponentName.unflattenFromString(item))) return true;
+            return false;
+        } catch (RuntimeException unavailable) { return false; }
     }
     static boolean canNotify(Context c) {
         NotificationManager manager = c.getSystemService(NotificationManager.class);
@@ -48,6 +52,7 @@ public final class Repository {
     }
     public static void saveSettings(Context c, JSONObject patch) throws Exception {
         new SecureSettings(c).save(patch);
+        ListenerHealth.requestRepair(c);
         Store.get(c).resetPendingDelay();
         process(c); BanxuApp.changed();
     }

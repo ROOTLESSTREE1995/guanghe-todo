@@ -32,7 +32,9 @@ public final class WidgetListService extends RemoteViewsService {
                 RemoteViews row = new RemoteViews(context.getPackageName(), R.layout.widget_row);
                 row.setTextViewText(R.id.widget_row_title, "暂时无法读取事项");
                 row.setTextViewText(R.id.widget_row_time, "点击打开光合待办重试");
-                row.setOnClickFillInIntent(R.id.widget_row, new Intent().putExtra("route", leaves ? "leaves" : "today"));
+                Intent retry = new Intent().putExtra("route", leaves ? "leaves" : "today");
+                if (!leaves) retry.putExtra("widgetAction", "open-list");
+                row.setOnClickFillInIntent(R.id.widget_row, retry);
                 return row;
             }
             List<WidgetModel.Item> current = items;

@@ -34,7 +34,7 @@ public class WidgetModelTest {
     @Test public void estimatedLeaveStillClearlyNeedsReturnVerification() {
         WidgetModel.Item leave = new WidgetModel.Item("a", "leave", "tracking", "请假", "", "estimated", NOW, NOW, false);
         assertEquals("请假 · 姓名待补", WidgetModel.title(leave));
-        assertEquals("今天 10:00 返校 · 暂定 · 待核查", WidgetModel.timeLabel(leave, NOW, ZONE));
+        assertEquals("待核查 · 暂定 · 今天 10:00 返校", WidgetModel.timeLabel(leave, NOW, ZONE));
         assertTrue(WidgetModel.overdue(leave, NOW));
         assertEquals("返校时间待补", WidgetModel.timeLabel(item("b", "leave", "tracking", 0, false), NOW, ZONE));
     }
@@ -51,7 +51,15 @@ public class WidgetModelTest {
         assertEquals("2027年1月1日 01:00", WidgetModel.timeLabel(task, NOW, ZoneId.of("UTC")));
     }
     @Test public void unknownTimeKeepsWaitingContext() {
-        assertEquals("时间待补 · 等反馈", WidgetModel.timeLabel(item("a", "followup", "waiting", 0, false), NOW, ZONE));
+        assertEquals("等反馈 · 时间待补", WidgetModel.timeLabel(item("a", "followup", "waiting", 0, false), NOW, ZONE));
+    }
+    @Test public void compactTimeKeepsStatusAndClockTogetherAndCrossDayDatesExplicit() {
+        WidgetModel.Item leave = new WidgetModel.Item("a", "leave", "tracking", "请假", "学生 A", "estimated", NOW, NOW, false);
+        assertEquals("待核查·暂定10:00", WidgetModel.compactTimeLabel(leave, NOW, ZONE));
+        WidgetModel.Item task = new WidgetModel.Item("b", "task", "todo", "提交名单", "", "estimated", NOW, NOW, false);
+        assertEquals("逾期·暂定10:00", WidgetModel.compactTimeLabel(task, NOW, ZONE));
+        assertEquals("明天09:00", WidgetModel.compactTimeLabel(item("c", "task", "todo", at("2026-10-03T09:00:00+08:00"), false), NOW, ZONE));
+        assertEquals("2027/1/1 09:00", WidgetModel.compactTimeLabel(item("d", "task", "todo", at("2027-01-01T09:00:00+08:00"), false), NOW, ZONE));
     }
     @Test public void everyItemRemainsReachableAndPageClampsAfterDeletion() {
         java.util.ArrayList<WidgetModel.Item> items = new java.util.ArrayList<>();

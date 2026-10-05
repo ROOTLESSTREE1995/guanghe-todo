@@ -70,9 +70,28 @@
     result.remindAt = reminderAt(result,leadMinutes);
     return result;
   }
+  function captureStatus(state = {}, preview = false) {
+    const permission = state.permissions?.notificationAccess === true;
+    const enabled = state.settings?.captureEnabled === true;
+    const d = state.captureDiagnostics;
+    const available = !!d && typeof d.connected === 'boolean';
+    const common = {permissionLabel:preview?'仅示例':permission?'已授权':'未授权',
+      serviceLabel:preview?'仅示例':!permission?'等待授权':!available?'暂无诊断信息':d.connected?'已连接':'未连接',
+      isOppo:/oppo|realme|oneplus/i.test(String(d?.deviceManufacturer || '')),
+      outcome:({saved:'已保存到消息收件箱。',duplicate:'这条消息已接收过，已跳过重复内容。',conversation_filtered:'通知标题不符合「只接收这些会话」的条件。',group_summary:'这是应用的汇总通知，等待单条消息通知。',ongoing:'这是持续显示的状态通知，已跳过。',no_text:'通知中没有可读取的文字，请检查原应用是否隐藏了消息内容。',outgoing_only:'这是你自己发送的消息，已跳过。',malformed:'通知格式无法读取，等待下一条文字通知。',storage_error:'消息保存失败，请检查手机可用空间后重试。'})[d?.lastOutcome] || '还没有接收记录。'};
+    if (preview) return {...common,mode:'preview',tone:'neutral',title:'通知接收诊断 · 示例',detail:'预览无法读取手机通知，也不会执行真实重连。请在安卓 App 中查看设备状态。'};
+    if (!enabled) return {...common,mode:'disabled',tone:'neutral',title:'接收通知已关闭',detail:'在下方打开「开始接收通知」并保存设置后，才会接收新消息。'};
+    if (!permission) return {...common,mode:'permission_required',tone:'warning',title:'等待通知访问授权',detail:'请在系统设置中允许光合待办读取通知。提醒通知权限与通知访问权限分别设置。'};
+    if (!available) return {...common,mode:'unavailable',tone:'neutral',title:'暂无服务连接信息',detail:'当前安装版本未提供接收诊断，请更新 App 后查看。已授权不代表服务已连接。'};
+    if (!d.connected) return {...common,mode:'disconnected',tone:'warning',title:'接收服务尚未连接',detail:'通知访问已授权，但系统暂未连接接收服务。可以请求重新连接，再检查后台设置。'};
+    return {...common,mode:'connected',tone:'good',title:'通知接收服务已连接',detail:'新消息会按已保存的来源设置接收。连接正常时，也可能因通知隐藏文字或会话筛选而未保存。'};
+  }
+  function notificationRepairMessage(status) {
+    return ({connected:'接收服务当前已连接，请用一条新的文字通知检查接收。',requested:'已向系统请求重新连接，连接结果会显示在诊断卡中。',disabled:'请先打开「开始接收通知」并保存设置。',permission_required:'请先在系统设置中开启光合待办的通知访问权限。',throttled:'刚刚已请求连接，请稍后查看服务状态。',unavailable:'暂时无法请求连接，请检查通知访问与后台设置。',preview:'这是界面预览，不能重新连接手机通知服务。'})[status] || '系统未返回连接结果，请查看诊断卡中的服务状态。';
+  }
   function defaults() {
     return {settings:{teacherName:'老师',className:'我的班级',model:'deepseek-flash',hasApiKey:false,cloudEnabled:false,captureEnabled:false,allowedPackages:['com.tencent.mm'],conversationFilters:'',leadMinutes:15},
-      permissions:{notificationAccess:false,postNotifications:false,exactAlarms:false,batteryOptimized:true},items:[],inbox:[],lastError:'',processing:false,apiTest:{status:'idle',message:''},version:'0.3.0'};
+      permissions:{notificationAccess:false,postNotifications:false,exactAlarms:false,batteryOptimized:true},captureDiagnostics:null,items:[],inbox:[],lastError:'',processing:false,apiTest:{status:'idle',message:''},version:'0.3.1'};
   }
   function samples(now = Date.now()) {
     const at = (h,m=0,day=0) => { const d=new Date(now);d.setDate(d.getDate()+day);d.setHours(h,m,0,0);return +d; };
@@ -88,5 +107,5 @@
       make(8,{title:'准备下周班会提纲',dueAt:at(17,0,3),detail:'整理讨论主题和班级活动安排。',sourceText:'下周班会提纲请在三天后17:00前准备好。'})
     ];
   }
-  return {closed,review,escape,endOfDay,sortItems,today,pendingLeaves,missingTime,reminderAt,counts,validateItem,parseLocal,defaults,samples,validStatuses};
+  return {closed,review,escape,endOfDay,sortItems,today,pendingLeaves,missingTime,reminderAt,counts,validateItem,parseLocal,defaults,samples,validStatuses,captureStatus,notificationRepairMessage};
 });

@@ -13,7 +13,10 @@ public final class BootReceiver extends BroadcastReceiver {
         PendingResult pending = goAsync(); Context app = c.getApplicationContext();
         WidgetUpdater.requestUpdate(app);
         BanxuApp.IO.execute(() -> {
-            try { ReminderScheduler.rescheduleAll(app); Repository.process(app); }
+            try {
+                if (Intent.ACTION_BOOT_COMPLETED.equals(action) || Intent.ACTION_MY_PACKAGE_REPLACED.equals(action)) ListenerHealth.requestRepair(app);
+                ReminderScheduler.rescheduleAll(app); Repository.process(app);
+            }
             finally { pending.finish(); }
         });
     }

@@ -77,7 +77,7 @@ public final class MainActivity extends Activity {
     }
     @Override protected void onResume() {
         super.onResume(); BanxuApp.attach(this);
-        BanxuApp.IO.execute(() -> { ReminderScheduler.rescheduleAll(this); Repository.process(this); BanxuApp.changed(); });
+        BanxuApp.IO.execute(() -> { ListenerHealth.requestRepair(this); ReminderScheduler.rescheduleAll(this); Repository.process(this); BanxuApp.changed(); });
     }
     @Override protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent); setIntent(intent);
@@ -143,7 +143,7 @@ public final class MainActivity extends Activity {
     public final class Bridge {
         @JavascriptInterface public String getState() {
             try { return Repository.state(MainActivity.this).toString(); }
-            catch (Exception ex) { return "{\"settings\":{},\"permissions\":{},\"items\":[],\"inbox\":[],\"lastError\":\"数据读取失败，请重启应用\",\"processing\":false,\"version\":\"0.3.0\"}"; }
+            catch (Exception ex) { return "{\"settings\":{},\"permissions\":{},\"items\":[],\"inbox\":[],\"lastError\":\"数据读取失败，请重启应用\",\"processing\":false,\"version\":\"0.3.1\"}"; }
         }
         @JavascriptInterface public String saveSettings(String json) { return perform(() -> { Repository.saveSettings(MainActivity.this, parse(json)); return null; }); }
         @JavascriptInterface public String ingestManual(String json) { return perform(() -> { Repository.manual(MainActivity.this, parse(json)); return null; }); }
@@ -156,15 +156,24 @@ public final class MainActivity extends Activity {
         @JavascriptInterface public String clearDemo() { return perform(() -> { Store.get(MainActivity.this).clearDemo(); BanxuApp.changed(); return null; }); }
         @JavascriptInterface public String processInbox() { return perform(() -> { Repository.process(MainActivity.this); return null; }); }
         @JavascriptInterface public String testApi() { return perform(() -> { Repository.testApi(getApplicationContext()); return null; }); }
+        @JavascriptInterface public String repairNotificationListener() {
+            return perform(() -> {
+                String status = ListenerHealth.requestRepair(getApplicationContext());
+                BanxuApp.changed();
+                return new JSONObject().put("status", status);
+            });
+        }
         @JavascriptInterface public String requestWidget(String json) {
             return perform(() -> {
-                String kind = parse(json).optString("kind");
+                JSONObject request = parse(json);
+                String kind = request.optString("kind"), size = request.optString("size", "list");
                 if (!"todo".equals(kind) && !"leave".equals(kind)) throw new IllegalArgumentException("小组件类型不存在");
+                if (!"mini".equals(size) && !"compact".equals(size) && !"list".equals(size)) throw new IllegalArgumentException("小组件尺寸不存在");
                 runOnUiThread(() -> {
                     if (isFinishing() || isDestroyed()) return;
                     try {
                         if (!WidgetUpdater.isPinSupported(MainActivity.this)) reportWidgetPin("unsupported");
-                        else reportWidgetPin(WidgetUpdater.pin(MainActivity.this, kind) ? "requested" : "unsupported");
+                        else reportWidgetPin(WidgetUpdater.pin(MainActivity.this, kind, size) ? "requested" : "unsupported");
                     } catch (Exception ex) { reportWidgetPin("unavailable"); }
                 });
                 // The launcher owns the final confirmation; queued never means installed.
@@ -179,6 +188,7 @@ public final class MainActivity extends Activity {
                     case "exactAlarms": intent = Build.VERSION.SDK_INT >= 31 ? new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:" + getPackageName())) : new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())); break;
                     case "battery": intent = new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS); break;
                     case "appNotifications": intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName()); break;
+                    case "appDetails": intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())); break;
                     default: throw new IllegalArgumentException("设置页面不存在");
                 }
                 runOnUiThread(() -> { try { startActivity(intent); } catch (ActivityNotFoundException ex) { Toast.makeText(MainActivity.this, "请在系统设置中搜索光合待办", Toast.LENGTH_LONG).show(); } });

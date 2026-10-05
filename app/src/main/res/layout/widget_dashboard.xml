@@ -1,37 +1,23 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/widget_root" android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:background="@drawable/widget_background" android:padding="16dp">
-    <LinearLayout android:id="@+id/widget_header" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:orientation="horizontal" android:gravity="center_vertical" android:paddingBottom="10dp" android:minHeight="40dp">
-        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
-            <TextView android:id="@+id/widget_brand" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_brand"
-                android:textColor="@color/widget_muted" android:textSize="11sp" android:letterSpacing="0.06" android:fontFamily="sans-serif-medium" />
-            <TextView android:id="@+id/widget_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp"
-                android:text="@string/widget_todo_title" android:textColor="@color/widget_ink" android:textSize="20sp" android:fontFamily="sans-serif-medium" android:maxLines="1" android:ellipsize="end" />
-        </LinearLayout>
-        <TextView android:id="@+id/widget_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_zero"
-            android:minWidth="36dp" android:minHeight="32dp" android:gravity="center" android:paddingStart="10dp" android:paddingEnd="10dp"
-            android:background="@drawable/widget_chip" android:textColor="@color/widget_green" android:textSize="18sp" android:fontFamily="sans-serif-medium" />
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/widget_root" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@drawable/widget_background" android:padding="16dp">
+  <LinearLayout android:id="@+id/widget_header" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingBottom="10dp" android:minHeight="40dp">
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+      <TextView android:id="@+id/widget_brand" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_brand" android:textColor="@color/widget_muted" android:textSize="11sp" android:letterSpacing="0.06" android:fontFamily="sans-serif-medium" />
+      <TextView android:id="@+id/widget_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="@string/widget_todo_title" android:textColor="@color/widget_ink" android:textSize="20sp" android:fontFamily="sans-serif-medium" android:maxLines="1" android:ellipsize="end" />
     </LinearLayout>
-    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-        <ListView android:id="@+id/widget_list" android:layout_width="match_parent" android:layout_height="match_parent"
-            android:divider="@color/widget_line" android:dividerHeight="1dp" android:scrollbars="none" android:overScrollMode="never" />
-        <LinearLayout android:id="@+id/widget_empty" android:layout_width="match_parent" android:layout_height="match_parent"
-            android:orientation="vertical" android:gravity="center_vertical" android:paddingTop="8dp" android:paddingBottom="8dp">
-            <TextView android:id="@+id/widget_empty_title" android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:text="@string/widget_loading" android:textColor="@color/widget_ink" android:textSize="16sp" android:fontFamily="sans-serif-medium" />
-            <TextView android:id="@+id/widget_empty_detail" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp"
-                android:text="@string/widget_preview_subtitle" android:textColor="@color/widget_muted" android:textSize="12sp" android:maxLines="3" android:ellipsize="end" />
-        </LinearLayout>
-    </FrameLayout>
-    <TextView android:id="@+id/widget_footer" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="9dp"
-        android:text="@string/widget_footer" android:textColor="@color/widget_muted" android:textSize="11sp" android:maxLines="1" android:ellipsize="end" />
-    <LinearLayout android:id="@+id/widget_pager" android:layout_width="match_parent" android:layout_height="40dp" android:orientation="horizontal" android:gravity="center_vertical" android:visibility="gone">
-        <TextView android:id="@+id/widget_previous" android:layout_width="60dp" android:layout_height="match_parent" android:gravity="center_vertical"
-            android:text="@string/widget_previous_page" android:textColor="@color/widget_green" android:textSize="11sp" />
-        <TextView android:id="@+id/widget_page_number" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center"
-            android:textColor="@color/widget_muted" android:textSize="11sp" android:maxLines="1" android:ellipsize="end" />
-        <TextView android:id="@+id/widget_next" android:layout_width="60dp" android:layout_height="match_parent" android:gravity="end|center_vertical"
-            android:text="@string/widget_next_page" android:textColor="@color/widget_green" android:textSize="11sp" />
+    <TextView android:id="@+id/widget_count" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/widget_zero" android:minWidth="36dp" android:minHeight="32dp" android:gravity="center" android:paddingStart="10dp" android:paddingEnd="10dp" android:background="@drawable/widget_chip" android:textColor="@color/widget_green" android:textSize="18sp" android:fontFamily="sans-serif-medium" />
+  </LinearLayout>
+  <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+    <ListView android:id="@+id/widget_list" android:layout_width="match_parent" android:layout_height="match_parent" android:divider="@color/widget_line" android:dividerHeight="1dp" android:scrollbars="none" android:overScrollMode="never" />
+    <LinearLayout android:id="@+id/widget_empty" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:gravity="center_vertical" android:paddingTop="8dp" android:paddingBottom="8dp">
+      <TextView android:id="@+id/widget_empty_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/widget_loading" android:textColor="@color/widget_ink" android:textSize="16sp" android:fontFamily="sans-serif-medium" />
+      <TextView android:id="@+id/widget_empty_detail" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="@string/widget_preview_subtitle" android:textColor="@color/widget_muted" android:textSize="12sp" android:maxLines="3" android:ellipsize="end" />
     </LinearLayout>
+  </FrameLayout>
+  <TextView android:id="@+id/widget_footer" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingTop="9dp" android:text="@string/widget_footer" android:textColor="@color/widget_muted" android:textSize="11sp" android:maxLines="1" android:ellipsize="end" />
+  <LinearLayout android:id="@+id/widget_pager" android:layout_width="match_parent" android:layout_height="40dp" android:orientation="horizontal" android:gravity="center_vertical" android:visibility="gone">
+    <TextView android:id="@+id/widget_previous" android:layout_width="60dp" android:layout_height="match_parent" android:gravity="center_vertical" android:text="@string/widget_previous_page" android:textColor="@color/widget_green" android:textSize="11sp" />
+    <TextView android:id="@+id/widget_page_number" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:textColor="@color/widget_muted" android:textSize="11sp" android:maxLines="1" android:ellipsize="end" />
+    <TextView android:id="@+id/widget_next" android:layout_width="60dp" android:layout_height="match_parent" android:gravity="end|center_vertical" android:text="@string/widget_next_page" android:textColor="@color/widget_green" android:textSize="11sp" />
+  </LinearLayout>
+  <TextView android:id="@+id/widget_undo" android:layout_width="match_parent" android:layout_height="36dp" android:gravity="center_vertical" android:text="@string/widget_undo" android:textColor="@color/widget_green" android:textSize="12sp" android:fontFamily="sans-serif-medium" android:visibility="gone" />
 </LinearLayout>
